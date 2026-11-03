@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tiếng Anh 12 - Ôn tập GK1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#161618;color:#e8e8ea;font:16px/1.5 system-ui,sans-serif}
+#app{max-width:760px;margin:0 auto;padding:12px 12px 90px}h1{font-size:22px;text-align:center}
+.card{background:#26262b;border-radius:14px;padding:16px;margin:10px 0}.bar{display:flex;justify-content:space-between;color:#aaa;font-size:14px;padding:4px 2px}
+.qt{white-space:pre-line;font-size:17px;margin:8px 0}small{color:#999}.hint{color:#f5a524;font-size:14px}
+.opt{display:flex;align-items:center;gap:12px;border:2px solid #3a3a42;border-radius:12px;padding:12px;margin:9px 0;cursor:pointer;background:#1f1f24;min-height:52px}
+.opt b{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid #666;display:flex;align-items:center;justify-content:center}
+.opt span{flex:1;word-break:break-word}.opt i{font-style:normal;color:#777;padding:6px 10px}
+.opt.sel{border-color:#f5a524;background:#3a2d12}.opt.sel b{background:#f5a524;color:#000;border-color:#f5a524}
+.opt.ok{border-color:#3fb950;background:#14301c}.opt.bad{border-color:#f85149;background:#3a1618}.opt.xx span{text-decoration:line-through;opacity:.4}
+.btn{display:block;width:100%;padding:14px;margin:8px 0;border:0;border-radius:12px;background:#f5a524;color:#000;font-size:16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:#34343b;color:#eee}.btn.big{background:#3fb950;font-size:17px}.btn:disabled{opacity:.4}
+.ft{position:fixed;left:0;right:0;bottom:0;background:#1d1d21;padding:10px 12px;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.ft .btn{width:auto;margin:0;padding:12px 18px}.ft span{color:#aaa}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pal{display:flex;flex-wrap:wrap;gap:6px}.pal button{width:38px;height:38px;border-radius:8px;border:1px solid #444;background:#26262b;color:#ddd}.pal .a{background:#5a4210}.pal .c{border-color:#f5a524}
+input[type=text]{width:100%;padding:12px;border-radius:10px;border:1px solid #444;background:#1f1f24;color:#fff;font-size:16px}
+.g{color:#3fb950}.r{color:#f85149}.ex{background:#1f2a38;border-radius:10px;padding:10px;margin-top:8px}
+table{width:100%;border-collapse:collapse}td,th{padding:8px 4px;border-bottom:1px solid #333;text-align:left;font-size:14px}
+#toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%) translateY(30px);opacity:0;transition:.2s;padding:12px 18px;border-radius:12px;background:#333;max-width:92%;text-align:center;pointer-events:none;z-index:9}
+#toast.on{opacity:1;transform:translateX(-50%)}#toast.good{background:#2a7a3a}#toast.badt{background:#a3462a}
+#nht{position:fixed;right:10px;bottom:62px;font-size:13px;color:#888;z-index:5}#crash{position:fixed;inset:0;background:#111;padding:20px;z-index:99;overflow:auto}
+</style></head><body><div id="app"></div><div id="toast"></div><div id="nht">NHT</div>
+<script>
+(function(){'use strict';
+// =================================================================
+// DÁN LINK FIREBASE REALTIME DATABASE CỦA BẠN VÀO GIỮA 2 DẤU NHÁY KÉP BÊN DƯỚI:
+const FIREBASE_URL = "DÁN_LINK_FIREBASE_VÀO_ĐÂY";
+// =================================================================
+const crash=m=>{if(document.getElementById('crash'))return;const d=document.createElement('div');d.id='crash';d.innerHTML='<h2>⚠️ Đã xảy ra lỗi</h2><pre style="white-space:pre-wrap;color:#f88"></pre><button class="btn" id="rec">Khôi phục ứng dụng</button>';d.querySelector('pre').textContent=String(m);document.body.appendChild(d);d.querySelector('#rec').onclick=()=>{try{localStorage.removeItem('qz_bk')}catch(e){}location.reload()}};
+window.addEventListener('error',e=>crash((e.message||'Lỗi')+(e.lineno?' (dòng '+e.lineno+')':'')));
+window.addEventListener('unhandledrejection',e=>crash(e.reason&&e.reason.message||e.reason));
+
+const S1="I. Mark the letter A, B, C or D to indicate the correct answer to each of the following questions.",S4="IV. REODERING";
+const mk=(id,sec,question,options,correct)=>({id,section:sec,type:"single",question,image:"",options,correct,explanation:""});
+const examData=[
+mk(1,S1,"Vo Nguyen Giap was widely recognized as a ________ genius for his pivotal role in leading Vietnamese forces during the First Indochina War and the Vietnam War.",["military","artistic","musical","literary"],0),
+mk(2,S1,"It’s important to preserve the cultural _____ of a nation.",["marriage","trend","identity","origin"],2),
+mk(3,S1,"When people throw too much waste away instead of recycling, the garbage usually ends up in a ______.",["greenhouse","landfill","factory","supermarket"],1),
+mk(4,S1,"Plastic bags______very slowly, which poses a threat to the ecosystem.",["release","reuse","decompose","recycle"],2),
+mk(5,S1,"General Vo Nguyen Giap successfully __________ the enemy at Dien Bien Phu.",["adopted","defeated","published","attended"],1),
+mk(6,S1,"Fireworks actually release a lot of ______ chemicals into the air.",["harm","harmful","harms","harmfully"],1),
+mk(7,S1,"As the principal founder of Microsoft, Bill Gates is one of the most _______ and  richest people on the planet.",["influence","influences","influencer","influential"],3),
+mk(8,S1,"Zuckerberg was forced to shut his website down, but its immense _______ and controversy had made him consider its future potential.",["popularly","popular","popularity","popularize"],2),
+mk(9,S1,"Floods and earthquakes are ______ disasters.",["natural","naturally","nature","naturalize"],0),
+mk(10,S1,"Steve Jobs's great success served as a source of __________ for many young people.",["inspire","inspiration","inspirational","inspired"],1),
+mk(11,S1,"She has devoted all her life _______the care of homeless people.",["to","from","for","on"],0),
+mk(12,S1,"I have to drop ______of school because I don't have any money.",["in","out","at","for"],1),
+mk(13,S1,"Many classmates throw plastic water bottles _____ after a single use.",["on","in","away","at"],2),
+mk(14,S1,"We should turn _____ the lights before leaving the classroom.",["down","on","off","up"],2),
+mk(15,S1,"Marie Curie was admired_____ her achievements in physics and chemistry.",["of","for","by","with"],1),
+mk(16,S1,"We need to ______ awareness of the importance of recycling in our community.",["get","do","make","raise"],3),
+mk(17,S1,"Students can ________ progress in understanding other cultures through exchange programs.",["make","do","get","become"],0),
+mk(18,S1,"The process of cultural globalization ______ significant effects on international relations.",["has","does","takes","raises"],0),
+mk(19,S1,"We recommend you _____ the suggested solutions into practice as soon as possible.",["do","put","use","take"],1),
+mk(20,S1,"Davies ______ the record for most points in a season.",["acquired","attends","holds","highlights"],2),
+mk(21,S4,"Question 1\na. Nam: True! Her diary gave people a deep insight into the hardship and bravery.\nb. Nam: Have you finished the presentation about Dr. Dang Thuy Tram yet?\nc. Hoa: Almost! She was truly an admirable woman who sacrificed her life for her country.",["b – a – c","b – c – a","c – b – a","a – c – b"],1),
+mk(22,S4,"Question 2\na. Alex: He certainly did. He co-founded Apple and revolutionized the technology industry.\nb. Ben: Did he have a huge impact on modern personal computers and smartphones?\nc. Alex: I watched a fascinating documentary about Steve Jobs last night.",["B-a-c","b-c-a.","c-b-a.","a-c-b"],2),
+mk(23,S4,"Question 3\na. Mai: Yes, he devoted his whole life to the struggle against apartheid and inequality in South Africa.\nb. Phong: Have you finished reading the biography of Nelson Mandela?\nc. Phong: That is so inspiring! His forgiveness and strong determination are lessons for all of us.",["b – a – c","a – b – c","b – c – a","c – a – b"],0),
+mk(24,S4,"Question 4\na. Phong: What key factors do you think made him so widely admired?\nb. Hoa: Steve Jobs, without a doubt! He completely transformed digital technology.\nc. Phong: Who is the technology visionary you respect the most?\nd. Hoa: His creativity was truly ahead of its time.\ne. Phong: I totally agree. I believe his innovative mindset and relentless passion changed everything.",["c – b – a – e – d","c – a – b – e – d","b – c – a – e – d","c – b – a – d – e"],3),
+mk(25,S4,"Question 5\na. Linh: We should definitely wear our traditional Ao Dai on that day.\nb. Linh: Let's choose the matching colors and patterns this afternoon.\nc. Huy: That's a lovely choice to showcase our rich cultural identity to everyone.\nd. Huy: What should our team wear to the upcoming multicultural festival?\ne. Huy: Okay. International visitors will certainly appreciate its elegant and graceful look.",["d – a – c – b – e","d – c – a – e – b","a – d – c – e – b","d – a – e – c – b"],0),
+mk(26,S4,"Question 6\nDear Helen,\nHow are you doing?\na. I know you love science, so you’re going to be interested in this article.\nb. I’ve just read an article about Stephen Hawking, one of the greatest scientists of all time.\nc. I really admire his strong will and brilliant mind.\nd. Please click on this link to read the article and tell me what you think.\ne. Despite being disabled, he made amazing discoveries about black holes and the universe.\nHope to hear from you soon!\nMai.",["b-c-e-a-d","a-d-e-c-b","b-a-e-c-d","a-e-d-c-b"],0),
+mk(27,S4,"Question 7\nDear Helen,\nHow are things?\na. I know you really care about the environment, so you’re going to love this article.\nb. I’ve just read an article about green solutions that help protect our planet.\nc. I feel inspired to start living a greener life.\ne. It mentions solar panels, electric buses, and recycling robots that reduce waste.\nd. Please click on this link to read the article and tell me what you think.\nHope to hear from you soon!\nMai.",["c-a-e- d-b","e-a-c-b-d","d-a- c-e-b","b-e-c-a-d"],3),
+mk(28,S4,"Question 8\na. To begin with, celebrating international festivals can bring a lot of fun and happiness with music, dances, and games.\nb. In short, young people in Vietnam benefit from celebrating Western holidays.\nc. Moreover, young people can demonstrate their creativity through participation in these events by dressing up as vampires, witches, and so on.\nd. The popularity of celebrating Western festivals has positive impacts on young people in Vietnam.\ne. In addition, a positive aspect of this trend is that it encourages extracurricular activities for students to learn useful life skills.",["d-a-e-c-b","d-a-c-b- e","d-a-b-c-e","e-c-d-a-b"],0),
+mk(29,S4,"Question 9\na. Furthermore, they create greater motivation for learning English.\nb. First of all, these events allow students to learn more about different cultures.\nc. In conclusion, Vietnamese youth benefit culturally and educationally from celebrating Western holidays.\nd. Additionally, joining such celebrations helps young people become more open-minded.\ne. Celebrating Western festivals helps Vietnamese youth gain cultural and educational benefits.",["b-e-a-c-d","b-e-a-d-c","e-b-a-d-c","e-b-d-c- a"],2)
+];
+
+// ---------- StorageEngine: IndexedDB + RAM cache (fallback LocalStorage) ----------
+const SE=(()=>{const mem={};let db=null;const P='qz_';
+const openDb=()=>new Promise(r=>{try{const q=indexedDB.open('qz_db',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>{db=q.result;r()};q.onerror=()=>r();q.onblocked=()=>r()}catch(e){r()}});
+const loadAll=()=>new Promise(r=>{if(!db)return r();try{const c=db.transaction('kv').objectStore('kv').openCursor();c.onsuccess=()=>{const x=c.result;if(x){mem[x.key]=x.value;x.continue()}else r()};c.onerror=()=>r()}catch(e){r()}});
+return{async init(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+await openDb();await loadAll();
+if(!db){try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.indexOf(P)===0&&k!=='qz_bk')mem[k.slice(3)]=JSON.parse(localStorage.getItem(k))}}catch(e){}}},
+get:(k,d)=>mem[k]===undefined||mem[k]===null?d:mem[k],
+set(k,v){mem[k]=v;if(db){try{db.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}else{try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}}}})();
+
+// ---------- Helpers ----------
+const $=s=>document.querySelector(s),L=['A','B','C','D'];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const Q={};examData.forEach(q=>{Q[q.id]=q});
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t}return a};
+const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+let S=null,V='home',P={},tt=null,lbT=null,LB=[],LBM='local',lbF='new';
+const toast=(m,c)=>{const t=$('#toast');t.textContent=m;t.className='on '+(c||'');clearTimeout(tt);tt=setTimeout(()=>{t.className=''},2400)};
+const cur=()=>S.el+(S.t0?performance.now()-S.t0:0);
+function save(){if(!S)return;S.el=cur();if(S.t0)S.t0=performance.now();SE.set('sess',S);try{localStorage.setItem('qz_bk',JSON.stringify(S))}catch(e){}}
+function clearSess(){S=null;SE.set('sess',null);try{localStorage.removeItem('qz_bk')}catch(e){}}
+const FB=()=>{const u=String(FIREBASE_URL).trim().replace(/\/+$/,'');return /^https:\/\//.test(u)?u:''};
+
+// ---------- Quiz logic ----------
+function start(mode,ids){if(S&&!confirm('Bài đang làm dở sẽ bị thay thế. Tiếp tục?'))return;
+ids=shuf(ids);S={mode,ord:ids.map(id=>({id,o:shuf(Q[id].options.map((_,k)=>k))})),i:0,sel:{},chk:{},res:{},xs:{},el:0,t0:performance.now(),lim:ids.length*60000};save();go('quiz')}
+function pick(k){const id=S.ord[S.i].id;if(S.chk[id])return;S.sel[id]=k;save();render()}
+function mv(d){const n=S.i+d;if(n>=0&&n<S.ord.length){S.i=n;save();render()}}
+function check(){const id=S.ord[S.i].id,ok=S.sel[id]===Q[id].correct;if(S.res[id]===undefined)S.res[id]=ok?1:0;S.chk[id]=1;save();
+toast(ok?'Làm tốt lắm - Hãy giữ vững phong độ. Tiến lên':'↻ Không đúng! - Làm lại hoặc bạn có thể bỏ qua',ok?'good':'badt');render()}
+function finish(){const ex=S.mode==='exam';
+const ans=S.ord.map(o=>{const q=Q[o.id],s=S.sel[o.id];return{id:o.id,s:s===undefined?-1:s,ok:ex?s===q.correct:S.res[o.id]===1}});
+const c=ans.filter(a=>a.ok).length,rec={t:Date.now(),sc:Math.round(c/ans.length*1000)/100,c,n:ans.length,ms:Math.round(cur()),mode:S.mode,ans,name:SE.get('name','')};
+const h=SE.get('hist',[]).slice();h.push(rec);SE.set('hist',h);
+const st=Object.assign({},SE.get('stats',{}));ans.forEach(a=>{const r=(st[a.id]||[0,0]).slice();r[0]++;if(!a.ok)r[1]++;st[a.id]=r});SE.set('stats',st);
+clearSess();lbSend(rec);go('result',{rec})}
+async function lbSend(rec){const e={name:rec.name||'Ẩn danh',sc:rec.sc,ms:rec.ms,t:rec.t,n:rec.n,mode:rec.mode};
+SE.set('lb',SE.get('lb',[]).concat([e]));const u=FB();
+if(!u){toast('Chưa cấu hình Firebase: dùng Bảng xếp hạng giả lập (LocalStorage)');return}
+try{const r=await fetch(u+'/lb.json',{method:'POST',body:JSON.stringify(e)});if(!r.ok)throw new Error('http '+r.status)}catch(x){toast('Không gửi được lên mạng, đã lưu BXH giả lập trên máy')}}
+async function lbLoad(){let rows=[];const u=FB();
+if(u){try{const r=await fetch(u+'/lb.json');if(!r.ok)throw new Error('http');const d=await r.json();rows=d?Object.values(d):[];LBM='online'}catch(x){rows=SE.get('lb',[]);LBM='local'}}
+else{rows=SE.get('lb',[]);LBM='local'}
+LB=rows;paintLB()}
+function paintLB(){const el=$('#lbl');if(!el||V!=='lb')return;
+const r=LB.slice().sort(lbF==='new'?(a,b)=>b.t-a.t:(a,b)=>b.sc-a.sc||a.ms-b.ms).slice(0,50);
+el.innerHTML=(LBM==='online'?'<small>🟢 Online - tự động cập nhật</small>':'<small>🟠 Chế độ giả lập (LocalStorage)</small>')+'<table><tr><th>#</th><th>Tên</th><th>Điểm</th><th>Thời gian</th></tr>'+(r.length?r.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+x.sc+'</td><td>'+fmt(x.ms)+'</td></tr>').join(''):'<tr><td colspan=4>Chưa có dữ liệu</td></tr>')+'</table>'}
+
+// ---------- Views ----------
+const VIEWS={
+home(){const fl=SE.get('flags',{}),nf=Object.keys(fl).length;
+return '<h1>Tiếng Anh 12 - Ôn tập GK1</h1>'+(S?'<button class="btn big" data-act="resume">▶️ TIẾP TỤC BÀI ĐANG LÀM DỞ (Đang ở Câu '+(S.i+1)+'/'+S.ord.length+')</button>':'')+
+'<div class="card"><input type="text" id="nm" placeholder="Họ và tên" value="'+esc(SE.get('name',''))+'"><button class="btn" data-act="start" data-m="practice">Chế độ Luyện tập</button><button class="btn" data-act="start" data-m="exam">Chế độ Phòng thi ('+examData.length+' phút)</button><button class="btn ghost" data-act="startflag">Ôn câu đã gắn cờ ('+nf+')</button></div>'+
+'<div class="row"><button class="btn ghost" data-act="go" data-v="hist">📜 Lịch sử</button><button class="btn ghost" data-act="go" data-v="stats">❗ Câu hay sai</button><button class="btn ghost" data-act="go" data-v="lb">🏆 Bảng xếp hạng</button><button class="btn ghost" data-act="exp">⬇️ Xuất sao lưu (.json)</button></div><button class="btn ghost" data-act="imp">⬆️ Nhập sao lưu (.json)</button><input type="file" id="fi" accept=".json" hidden>'},
+quiz(){const o=S.ord[S.i],q=Q[o.id],id=q.id,ex=S.mode==='exam',ck=S.chk[id],sel=S.sel[id],ok=sel===q.correct,fl=SE.get('flags',{})[id],xs=S.xs[id]||{},last=S.i===S.ord.length-1;
+const opts=o.o.map((k,j)=>{let c=sel===k?'sel':'';if(ck){if(k===q.correct)c='ok';else if(sel===k)c='bad'}if(xs[k])c+=' xx';
+return '<div class="opt '+c+'" data-act="pick" data-k="'+k+'"><b>'+L[j]+'</b><span>'+esc(q.options[k])+'</span><i data-act="x" data-k="'+k+'" title="Gạch đáp án">✕</i></div>'}).join('');
+let btn;if(ex)btn=last?'<button class="btn" id="main" data-act="submit">Nộp bài</button>':'<button class="btn" id="main" data-act="next">Câu tiếp theo</button>';
+else if(!ck)btn='<button class="btn" id="main" data-act="chk"'+(sel===undefined?' disabled':'')+'>Kiểm tra</button>';
+else if(ok)btn='<button class="btn" id="main" data-act="next">'+(last?'Hoàn thành':'Câu tiếp theo')+'</button>';
+else btn='<button class="btn" id="main" data-act="retry">↻ Thử lại</button>';
+const pal=ex?'<div class="card pal">'+S.ord.map((x,i)=>'<button class="'+(S.sel[x.id]!==undefined?'a ':'')+(i===S.i?'c':'')+'" data-act="go2" data-i="'+i+'">'+(i+1)+'</button>').join('')+'</div>':'';
+return '<div class="bar"><span>Câu '+(S.i+1)+(sel!==undefined?' - Chọn '+L[o.o.indexOf(sel)]:'')+'</span><span id="tm"></span></div>'+pal+
+'<div class="card"><small>'+esc(q.section)+'</small><h3 style="margin:6px 0">Câu '+(S.i+1)+'</h3><div class="qt">'+esc(q.question)+'</div><div class="hint">Chọn một đáp án đúng</div>'+
+'<div style="margin:6px 0"><button class="btn ghost" style="display:inline-block;width:auto;padding:6px 10px;margin:0 6px 0 0;'+(fl===1?'outline:2px solid #f5a524':'')+'" data-act="flag" data-f="1">⭐ Câu hay/Cần nhớ</button><button class="btn ghost" style="display:inline-block;width:auto;padding:6px 10px;margin:0;'+(fl===2?'outline:2px solid #f5a524':'')+'" data-act="flag" data-f="2">⚠️ Phân vân/Đoán mò</button></div>'+opts+
+(ck&&q.explanation?'<div class="ex">💡 Giải thích chi tiết: '+esc(q.explanation)+'</div>':'')+'</div>'+
+'<div class="ft"><span>Câu '+(S.i+1)+'/'+S.ord.length+'</span><span>'+(ck&&!ok?'<button class="btn ghost" data-act="next" style="margin-right:6px">Bỏ qua</button>':'')+'</span>'+btn+'</div>'},
+result(){const r=P.rec,w=r.n-r.c;
+return '<h1>Kết quả</h1><div class="card" style="text-align:center"><div style="font-size:42px;color:#f5a524">'+r.sc+'/10</div>Đúng '+r.c+'/'+r.n+' · Thời gian '+fmt(r.ms)+'</div><button class="btn" data-act="rv" data-r="last">Xem lại chi tiết</button>'+(w?'<button class="btn" data-act="startlast">Luyện tập lại '+w+' câu sai</button>':'')+'<button class="btn ghost" data-act="go" data-v="home">Trang chủ</button>'},
+hist(){const h=SE.get('hist',[]);
+return '<h1>Lịch sử làm bài</h1>'+(h.length?h.map((r,i)=>[r,i]).reverse().map(x=>'<div class="card">'+new Date(x[0].t).toLocaleString('vi-VN')+' · '+(x[0].mode==='exam'?'Phòng thi':'Luyện tập')+'<br><b>'+x[0].sc+'/10</b> (đúng '+x[0].c+'/'+x[0].n+') · '+fmt(x[0].ms)+'<button class="btn ghost" data-act="rv" data-r="'+x[1]+'">Xem lại chi tiết</button></div>').join(''):'<div class="card">Chưa có lượt làm bài nào.</div>')+'<button class="btn ghost" data-act="go" data-v="home">← Trang chủ</button>'},
+review(){const r=P.rec,f=P.f,rows=r.ans.filter(a=>f==='all'||(f==='bad'?!a.ok:a.ok)).map(a=>{const q=Q[a.id];
+return '<div class="card"><small>'+esc(q.section)+' · Câu '+a.id+'</small><div class="qt">'+esc(q.question)+'</div><div class="'+(a.ok?'g':'r')+'">Đã chọn: '+(a.s<0?'(bỏ trống)':esc(q.options[a.s]))+'</div><div class="g">Đáp án đúng: '+esc(q.options[q.correct])+'</div>'+(q.explanation?'<div class="ex">💡 '+esc(q.explanation)+'</div>':'')+'</div>'}).join('');
+return '<h1>Xem lại chi tiết</h1><div class="row"><button class="btn ghost" data-act="rf" data-f="all">Tất cả</button><button class="btn ghost" data-act="rf" data-f="bad">Câu sai</button><button class="btn ghost" data-act="rf" data-f="ok">Câu đúng</button><button class="btn ghost" data-act="go" data-v="home">Trang chủ</button></div>'+(rows||'<div class="card">Không có câu nào.</div>')},
+stats(){const st=SE.get('stats',{}),rows=Object.keys(st).map(id=>({id:+id,t:st[id][0],w:st[id][1]})).filter(r=>r.w>0&&Q[r.id]).sort((a,b)=>b.w/b.t-a.w/a.t||b.w-a.w);
+return '<h1>Bảng tổng hợp câu hay làm sai</h1>'+(rows.length?'<button class="btn" data-act="startwrong">Luyện tập các câu hay sai ('+rows.length+')</button><div class="card"><table><tr><th>Câu</th><th>Sai/Làm</th><th>Tỉ lệ sai</th></tr>'+rows.map(r=>'<tr><td>'+r.id+'. '+esc(Q[r.id].question.slice(0,70))+'…</td><td>'+r.w+'/'+r.t+'</td><td>'+Math.round(r.w/r.t*100)+'%</td></tr>').join('')+'</table></div>':'<div class="card">Chưa có câu nào làm sai.</div>')+'<button class="btn ghost" data-act="go" data-v="home">← Trang chủ</button>'},
+lb(){return '<h1>🏆 Bảng xếp hạng</h1><div class="row"><button class="btn ghost" data-act="lbf" data-f="new">Lượt làm mới nhất</button><button class="btn ghost" data-act="lbf" data-f="top">Top điểm cao nhất</button></div><div class="card" id="lbl">Đang tải…</div><button class="btn ghost" data-act="go" data-v="home">← Trang chủ</button>'}};
+function render(){$('#app').innerHTML=VIEWS[V]();if(V==='lb')paintLB()}
+function go(v,p){V=v;P=p||{};clearInterval(lbT);if(v==='lb'){lbLoad();lbT=setInterval(lbLoad,5000)}render();window.scrollTo(0,0)}
+
+// ---------- Events (một listener duy nhất, event delegation) ----------
+function onClick(e){const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act,d=t.dataset;
+switch(a){
+case 'go':go(d.v);break;
+case 'start':{if(!SE.get('name','')){toast('Vui lòng nhập Họ và tên trước');const n=$('#nm');if(n)n.focus();break}start(d.m,examData.map(q=>q.id));break}
+case 'startflag':{const f=SE.get('flags',{}),ids=Object.keys(f).map(Number).filter(i=>Q[i]);if(!ids.length){toast('Chưa có câu nào gắn cờ');break}start('practice',ids);break}
+case 'startwrong':{const st=SE.get('stats',{});start('practice',Object.keys(st).filter(i=>st[i][1]>0&&Q[i]).map(Number));break}
+case 'startlast':start('practice',P.rec.ans.filter(x=>!x.ok).map(x=>x.id));break;
+case 'resume':S.t0=performance.now();go('quiz');break;
+case 'pick':pick(+d.k);break;
+case 'x':{const id=S.ord[S.i].id,m=S.xs[id]=S.xs[id]||{};m[d.k]=!m[d.k];save();render();break}
+case 'flag':{const id=S.ord[S.i].id,f=Object.assign({},SE.get('flags',{}));if(f[id]===+d.f)delete f[id];else f[id]=+d.f;SE.set('flags',f);render();break}
+case 'chk':check();break;
+case 'retry':{const id=S.ord[S.i].id;delete S.sel[id];delete S.chk[id];save();render();break}
+case 'next':if(S.i<S.ord.length-1)mv(1);else finish();break;
+case 'go2':S.i=+d.i;save();render();break;
+case 'submit':{const un=S.ord.filter(o=>S.sel[o.id]===undefined).length;if(un&&!confirm('Còn '+un+' câu chưa làm. Vẫn nộp bài?'))break;finish();break}
+case 'rv':{const h=SE.get('hist',[]);go('review',{rec:d.r==='last'?P.rec:h[+d.r],f:'all'});break}
+case 'rf':P.f=d.f;render();break;
+case 'lbf':lbF=d.f;paintLB();break;
+case 'exp':exportData();break;
+case 'imp':$('#fi').click();break}}
+function exportData(){const o={hist:SE.get('hist',[]),stats:SE.get('stats',{}),flags:SE.get('flags',{}),lb:SE.get('lb',[]),name:SE.get('name','')};
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='sao-luu-on-tap-'+Date.now()+'.json';document.body.appendChild(a);a.click();a.remove();toast('Đã xuất file sao lưu')}
+function importData(f){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result),h=SE.get('hist',[]).slice(),seen={};h.forEach(x=>{seen[x.t]=1});(o.hist||[]).forEach(x=>{if(!seen[x.t])h.push(x)});h.sort((a,b)=>a.t-b.t);SE.set('hist',h);
+const st=Object.assign({},SE.get('stats',{}));Object.keys(o.stats||{}).forEach(k=>{const a=st[k]||[0,0],b=o.stats[k];st[k]=[Math.max(a[0],b[0]),Math.max(a[1],b[1])]});SE.set('stats',st);
+SE.set('flags',Object.assign({},SE.get('flags',{}),o.flags||{}));if(o.name&&!SE.get('name',''))SE.set('name',o.name);toast('Đã nhập sao lưu thành công','good');render()}catch(x){toast('File sao lưu không hợp lệ','badt')}};r.readAsText(f)}
+
+document.addEventListener('click',onClick);
+document.addEventListener('input',e=>{if(e.target.id==='nm')SE.set('name',e.target.value.trim())});
+document.addEventListener('change',e=>{if(e.target.id==='fi'&&e.target.files[0]){importData(e.target.files[0]);e.target.value=''}});
+document.addEventListener('contextmenu',e=>{const o=e.target.closest('.opt');if(o&&V==='quiz'&&S){e.preventDefault();const id=S.ord[S.i].id,m=S.xs[id]=S.xs[id]||{};m[o.dataset.k]=!m[o.dataset.k];save();render()}});
+document.addEventListener('keydown',e=>{if(V!=='quiz'||!S||e.target.tagName==='INPUT'||e.ctrlKey||e.metaKey||e.altKey)return;const o=S.ord[S.i],k=e.key.toLowerCase();
+let j=k.length===1?'1234'.indexOf(k):-1;if(j<0&&k.length===1)j='abcd'.indexOf(k);
+if(j>=0)pick(o.o[j]);else if(k==='enter'||k===' '){e.preventDefault();const b=$('#main');if(b&&!b.disabled)b.click()}else if(k==='arrowright')mv(1);else if(k==='arrowleft')mv(-1)});
+function pause(){if(S&&S.t0){S.el=cur();S.t0=null;save()}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();else if(S&&V==='quiz'&&!S.t0)S.t0=performance.now()});
+window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);
+setInterval(()=>{if(V!=='quiz'||!S||!S.t0)return;const el=$('#tm');if(!el)return;const c=cur();
+if(S.mode==='exam'){const rem=S.lim-c;el.textContent='⏱ '+fmt(rem);if(rem<=0){toast('Hết giờ! Tự động nộp bài');finish()}}else el.textContent='⏱ '+fmt(c)},1000);
+
+document.addEventListener('DOMContentLoaded',async()=>{await SE.init();
+S=SE.get('sess',null);if(!S){try{S=JSON.parse(localStorage.getItem('qz_bk')||'null')}catch(e){S=null}}
+if(S){if(!S.ord||!S.ord.every(o=>Q[o.id])){clearSess()}else S.t0=null}
+render();if(S&&confirm('Bạn có bài đang làm dở (Câu '+(S.i+1)+'/'+S.ord.length+'). Làm tiếp không?')){S.t0=performance.now();go('quiz')}});
+})();
+</script></body></html>
